@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · SafeSense</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <p class="logo">SafeSense</p>
+      <div class="zone-card">
+        <strong>Workshop Line 2</strong>
+        <span>Plant A</span>
+      </div>
+      <nav class="nav" aria-label="Main">
+        <a class="active" href="/dashboard">Dashboard</a>
+        <a href="/live">Live monitoring</a>
+        <a href="/alerts">Alerts <span class="badge" id="alert-badge" hidden>0</span></a>
+        <a href="/history">History</a>
+        <a href="/limits">Safety limits</a>
+        <a href="/tests">Test results</a>
+        <a href="/settings">Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-row">
+          <div class="avatar" id="avatar">A</div>
+          <div>
+            <strong id="user-name">Aisha Khan</strong>
+            <div class="muted" id="user-role">Supervisor</div>
+          </div>
+        </div>
+        <p class="muted">Prototype - simulated data</p>
+        <a href="#" id="logout">Log out</a>
+      </div>
+    </aside>
+    <div class="main">
+      <button class="menu-toggle" type="button" id="menu-toggle" aria-expanded="false">Menu</button>
+      <div class="topbar">
+        <div>Workshop Line 2 - Plant A</div>
+        <div class="pill NORMAL" id="overall-pill">Normal</div>
+      </div>
+      <div class="conn-banner" id="conn-banner" role="status">Connection lost, retrying...</div>
+      <div id="content">
+        <div class="header-row">
+          <div>
+            <h1 id="hello">Hello</h1>
+            <p class="muted" id="updated">updated just now</p>
+          </div>
+          <div>
+            <div class="muted" style="margin-bottom:6px">Demo data</div>
+            <div class="segmented" role="group" aria-label="Demo data">
+              <button type="button" data-mode="auto" aria-pressed="true">Auto</button>
+              <button type="button" data-mode="normal" aria-pressed="false">Normal</button>
+              <button type="button" data-mode="warning" aria-pressed="false">Warning</button>
+              <button type="button" data-mode="critical" aria-pressed="false">Critical</button>
+            </div>
+          </div>
+        </div>
+        <section class="banner NORMAL" id="banner" aria-live="polite"></section>
+        <section class="cards" id="cards"></section>
+        <section class="panels">
+          <article class="card">
+            <div class="header-row">
+              <h2>Last 60 seconds</h2>
+              <label class="muted">
+                Sensor
+                <select id="chart-sensor" style="margin-left:8px;padding:6px;border-radius:8px;border:1px solid var(--border);font:inherit">
+                </select>
+              </label>
+            </div>
+            <canvas id="chart" height="140" aria-label="Sensor trend chart"></canvas>
+          </article>
+          <article class="card" id="recent-alerts">
+            <h2>Recent alerts</h2>
+            <div id="alert-list"></div>
+          </article>
+        </section>
+      </div>
+      <p class="page-footer">Prototype - simulated data</p>
+    </div>
+  </div>
+  <div class="toast" id="toast" hidden role="status"></div>
+  <script src="/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test results · SafeSense</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <p class="logo">SafeSense</p>
+      <div class="zone-card">
+        <strong>Workshop Line 2</strong>
+        <span>Plant A</span>
+      </div>
+      <nav class="nav" aria-label="Main">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/live">Live monitoring</a>
+        <a href="/alerts">Alerts</a>
+        <a href="/history">History</a>
+        <a href="/limits">Safety limits</a>
+        <a class="active" href="/tests">Test results</a>
+        <a href="/settings">Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-row">
+          <div class="avatar">A</div>
+          <div>
+            <strong id="user-name">Aisha Khan</strong>
+            <div class="muted" id="user-role">Supervisor</div>
+          </div>
+        </div>
+        <p class="muted">Prototype - simulated data</p>
+        <a href="#" id="logout">Log out</a>
+      </div>
+    </aside>
+    <div class="main" id="content">
+      <button class="menu-toggle" type="button" id="menu-toggle" aria-expanded="false">Menu</button>
+      <div class="header-row">
+        <div>
+          <h1>Test results</h1>
+          <p class="muted" id="subtitle">Sample data for demonstration</p>
+          <p class="muted" id="env-line"></p>
+        </div>
+        <div class="toolbar">
+          <div class="segmented" role="group" aria-label="Report source">
+            <button type="button" id="toggle-sample" aria-pressed="true">Sample report</button>
+            <button type="button" id="toggle-live" aria-pressed="false">Live run</button>
+          </div>
+          <button class="btn" type="button" id="run-live">Run live tests</button>
+          <button class="btn secondary" type="button" id="download">Download report (JSON)</button>
+        </div>
+      </div>
+      <section class="summary-grid" id="summary"></section>
+      <div class="stack-bar" id="stack-bar" aria-hidden="true"></div>
+      <div class="toolbar">
+        <div class="chips" id="filters" role="group" aria-label="Category filter"></div>
+        <input type="search" id="search" placeholder="Search by id or name" aria-label="Search tests">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Test</th>
+              <th>Input</th>
+              <th>Expected</th>
+              <th>Actual</th>
+              <th>OOP concept</th>
+              <th>Time</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <article class="card" style="margin-top:16px">
+        <h2>OOP coverage</h2>
+        <div id="oop-coverage"></div>
+      </article>
+      <article class="card" style="margin-top:16px">
+        <h2>Console output of U1 to U3</h2>
+        <pre class="console" id="console-block">Location: Zone A
+Status: NORMAL - Air is safe.
+---------------------------------
+Location: Zone A
+Status: CRITICAL - Toxic gas detected!
+---------------------------------
+ERROR INPUT: Gas level cannot be negative!</pre>
+      </article>
+      <p class="page-footer">Prototype - simulated data</p>
+    </div>
+  </div>
+  <script src="/tests.js"></script>
+</body>
+</html>

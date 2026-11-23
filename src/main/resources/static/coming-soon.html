@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coming soon · SafeSense</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <p class="logo">SafeSense</p>
+      <div class="zone-card">
+        <strong>Workshop Line 2</strong>
+        <span>Plant A</span>
+      </div>
+      <nav class="nav" aria-label="Main">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/live">Live monitoring</a>
+        <a href="/alerts">Alerts</a>
+        <a href="/history">History</a>
+        <a href="/limits">Safety limits</a>
+        <a href="/tests">Test results</a>
+        <a href="/settings">Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <p class="muted">Prototype - simulated data</p>
+        <a href="#" id="logout">Log out</a>
+      </div>
+    </aside>
+    <div class="main">
+      <button class="menu-toggle" type="button" id="menu-toggle">Menu</button>
+      <div class="card">
+        <h1>Coming soon</h1>
+        <p>This page is a placeholder for the ET-201 prototype. Use Dashboard or Test results.</p>
+        <p><a href="/dashboard">Back to dashboard</a></p>
+      </div>
+      <p class="page-footer">Prototype - simulated data</p>
+    </div>
+  </div>
+  <script>
+    document.getElementById("menu-toggle").addEventListener("click", () => {
+      document.getElementById("sidebar").classList.toggle("open");
+    });
+    document.getElementById("logout").addEventListener("click", async (e) => {
+      e.preventDefault();
+      await fetch("/api/logout", { method: "POST", credentials: "same-origin" });
+      window.location.href = "/login";
+    });
+    const path = location.pathname.replace("/", "") || "page";
+    document.querySelectorAll(".nav a").forEach((a) => {
+      if (a.getAttribute("href") === "/" + path) a.classList.add("active");
+    });
+  </script>
+</body>
+</html>
