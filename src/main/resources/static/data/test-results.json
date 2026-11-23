@@ -1,0 +1,463 @@
+{
+  "project": "SafeSense",
+  "build": "v0.1",
+  "course": "ET-201",
+  "team": "Team 23",
+  "environment": "Java 17, Spring Boot, Chrome 126, localhost:8080",
+  "note": "Sample data for demonstration",
+  "bug": {
+    "id": "BUG-01",
+    "symptom": "Hydrogen sulfide at exactly 50.0 ppm showed Warning instead of Critical",
+    "rootCause": "Threshold.classify() used > instead of >= for the critical limit",
+    "fix": "Changed value > criticalLimit to value >= criticalLimit",
+    "retest": "T8 passed, then T1 to T12 re-run, all pass"
+  },
+  "tests": [
+    {
+      "id": "U1",
+      "category": "Unit",
+      "name": "Normal gas level",
+      "input": "setGasLevel(30.0)",
+      "expected": "NORMAL",
+      "actual": "NORMAL: Air is safe",
+      "oopConcept": "Method overriding",
+      "result": "PASS"
+    },
+    {
+      "id": "U2",
+      "category": "Unit",
+      "name": "Critical gas level",
+      "input": "setGasLevel(120.5)",
+      "expected": "CRITICAL",
+      "actual": "CRITICAL: Toxic gas detected",
+      "oopConcept": "Method overriding",
+      "result": "PASS"
+    },
+    {
+      "id": "U3",
+      "category": "Unit",
+      "name": "Negative input",
+      "input": "setGasLevel(-15.0)",
+      "expected": "Exception handled, level 0",
+      "actual": "ERROR INPUT: Gas level cannot be negative!, level 0",
+      "oopConcept": "Exception handling",
+      "result": "PASS"
+    },
+    {
+      "id": "U4",
+      "category": "Unit",
+      "name": "Private fields",
+      "input": "access gasLevel directly",
+      "expected": "Compile error, getter works",
+      "actual": "Compile error, getGasLevel() works",
+      "oopConcept": "Encapsulation",
+      "result": "PASS"
+    },
+    {
+      "id": "U5",
+      "category": "Unit",
+      "name": "Parent constructor",
+      "input": "new GasSensor(\"Methane Sensor\",\"Zone A\")",
+      "expected": "name and location set via super()",
+      "actual": "Both set",
+      "oopConcept": "Inheritance",
+      "result": "PASS"
+    },
+    {
+      "id": "U6",
+      "category": "Unit",
+      "name": "Polymorphism",
+      "input": "loop over List<Sensor> (4 sensors)",
+      "expected": "each calls its own checkSafetyStatus()",
+      "actual": "4 correct different results",
+      "oopConcept": "Polymorphism",
+      "result": "PASS"
+    },
+    {
+      "id": "U7",
+      "category": "Unit",
+      "name": "NaN input",
+      "input": "setDecibelLevel(NaN)",
+      "expected": "Exception handled, sensor error flag",
+      "actual": "Level 0, flag set",
+      "oopConcept": "Exception handling",
+      "result": "PASS"
+    },
+    {
+      "id": "U8",
+      "category": "Unit",
+      "name": "Interface swap",
+      "input": "replace SimulatedDataSource with stub",
+      "expected": "other classes unchanged",
+      "actual": "No other class changed",
+      "oopConcept": "Interface",
+      "result": "PASS"
+    },
+    {
+      "id": "T1",
+      "category": "Threshold",
+      "name": "Sound 84.9 dB",
+      "input": "Sound 84.9 dB",
+      "expected": "NORMAL",
+      "actual": "NORMAL",
+      "result": "PASS"
+    },
+    {
+      "id": "T2",
+      "category": "Threshold",
+      "name": "Sound 85.0 dB",
+      "input": "Sound 85.0 dB",
+      "expected": "WARNING",
+      "actual": "WARNING",
+      "result": "PASS"
+    },
+    {
+      "id": "T3",
+      "category": "Threshold",
+      "name": "Sound 100.0 dB",
+      "input": "Sound 100.0 dB",
+      "expected": "CRITICAL",
+      "actual": "CRITICAL",
+      "result": "PASS"
+    },
+    {
+      "id": "T4",
+      "category": "Threshold",
+      "name": "CO 34.9 ppm",
+      "input": "Carbon monoxide 34.9 ppm",
+      "expected": "NORMAL",
+      "actual": "NORMAL",
+      "result": "PASS"
+    },
+    {
+      "id": "T5",
+      "category": "Threshold",
+      "name": "CO 35.0 ppm",
+      "input": "Carbon monoxide 35.0 ppm",
+      "expected": "WARNING",
+      "actual": "WARNING",
+      "result": "PASS"
+    },
+    {
+      "id": "T6",
+      "category": "Threshold",
+      "name": "CO 200.0 ppm",
+      "input": "Carbon monoxide 200.0 ppm",
+      "expected": "CRITICAL",
+      "actual": "CRITICAL",
+      "result": "PASS"
+    },
+    {
+      "id": "T7",
+      "category": "Threshold",
+      "name": "H2S 10.0 ppm",
+      "input": "Hydrogen sulfide 10.0 ppm",
+      "expected": "WARNING",
+      "actual": "WARNING",
+      "result": "PASS"
+    },
+    {
+      "id": "T8",
+      "category": "Threshold",
+      "name": "H2S 50.0 ppm",
+      "input": "Hydrogen sulfide 50.0 ppm",
+      "expected": "CRITICAL",
+      "actual": "WARNING (first run), CRITICAL after fix",
+      "result": "FIXED"
+    },
+    {
+      "id": "T9",
+      "category": "Threshold",
+      "name": "Methane 999 ppm",
+      "input": "Methane 999 ppm",
+      "expected": "NORMAL",
+      "actual": "NORMAL",
+      "result": "PASS"
+    },
+    {
+      "id": "T10",
+      "category": "Threshold",
+      "name": "Methane 5000 ppm",
+      "input": "Methane 5000 ppm",
+      "expected": "CRITICAL",
+      "actual": "CRITICAL",
+      "result": "PASS"
+    },
+    {
+      "id": "T11",
+      "category": "Threshold",
+      "name": "Any gas 0 ppm",
+      "input": "Any gas 0 ppm",
+      "expected": "NORMAL",
+      "actual": "NORMAL",
+      "result": "PASS"
+    },
+    {
+      "id": "T12",
+      "category": "Threshold",
+      "name": "Any gas 1,000,000 ppm",
+      "input": "Any gas 1,000,000 ppm",
+      "expected": "CRITICAL",
+      "actual": "CRITICAL",
+      "result": "PASS"
+    },
+    {
+      "id": "D1",
+      "category": "Dashboard",
+      "name": "Normal state",
+      "input": "67 dB, CO 6, H2S 1.9, CH4 183",
+      "expected": "green banner \"All readings are within safe limits.\", pill Normal",
+      "actual": "Green banner and Normal pill",
+      "result": "PASS"
+    },
+    {
+      "id": "D2",
+      "category": "Dashboard",
+      "name": "Warning state",
+      "input": "91 dB, CO 42, H2S 14.2, CH4 1450",
+      "expected": "amber banner \"4 readings are above safe limits\", pill Warning",
+      "actual": "Amber banner, 4 bullets, Warning pill",
+      "result": "PASS"
+    },
+    {
+      "id": "D3",
+      "category": "Dashboard",
+      "name": "Critical state",
+      "input": "102 dB, CO 59, H2S 46.6, CH4 258",
+      "expected": "red banner \"3 readings are above safe limits\", pill Critical",
+      "actual": "Red banner, 3 bullets, Critical pill",
+      "result": "PASS"
+    },
+    {
+      "id": "D4",
+      "category": "Dashboard",
+      "name": "Critical H2S spike",
+      "input": "70 dB, CO 8, H2S 62.0, CH4 190",
+      "expected": "red banner \"Hydrogen sulfide is 62.0 ppm, above the critical limit of 50 ppm.\"",
+      "actual": "Red banner with H2S 62.0 ppm message, pill Critical",
+      "result": "PASS"
+    },
+    {
+      "id": "A1",
+      "category": "Alerts",
+      "name": "Normal to Critical",
+      "input": "status worsens to Critical",
+      "expected": "alert created, red toast 5 s, badge 0 to 3",
+      "actual": "Alert created, toast 5 s, badge 0 to 3",
+      "result": "PASS"
+    },
+    {
+      "id": "A2",
+      "category": "Alerts",
+      "name": "Critical stays Critical",
+      "input": "repeated Critical readings",
+      "expected": "no duplicate alert",
+      "actual": "No new alert",
+      "result": "PASS"
+    },
+    {
+      "id": "A3",
+      "category": "Alerts",
+      "name": "Critical to Normal",
+      "input": "mode switched to Normal",
+      "expected": "banner turns green, no new alert",
+      "actual": "Green banner, no new alert",
+      "result": "PASS"
+    },
+    {
+      "id": "A4",
+      "category": "Alerts",
+      "name": "Alert cap",
+      "input": "55 alerts generated",
+      "expected": "only latest 50 kept",
+      "actual": "List size = 50",
+      "result": "PASS"
+    },
+    {
+      "id": "A5",
+      "category": "Alerts",
+      "name": "Recent alerts panel",
+      "input": "more than 5 alerts stored",
+      "expected": "latest 5, newest first",
+      "actual": "Correct order, 5 rows",
+      "result": "PASS"
+    },
+    {
+      "id": "A6",
+      "category": "Alerts",
+      "name": "Empty alerts",
+      "input": "fresh session, no alerts yet",
+      "expected": "shows \"No alerts yet\"",
+      "actual": "Shown",
+      "result": "PASS"
+    },
+    {
+      "id": "L1",
+      "category": "Login",
+      "name": "Correct login",
+      "input": "aisha@demo.com / Demo@123",
+      "expected": "/dashboard, \"Hello, Aisha\"",
+      "actual": "Redirected to /dashboard, Hello, Aisha",
+      "result": "PASS"
+    },
+    {
+      "id": "L2",
+      "category": "Login",
+      "name": "Wrong password",
+      "input": "aisha@demo.com / wrong",
+      "expected": "Invalid email or password",
+      "actual": "Invalid email or password",
+      "result": "PASS"
+    },
+    {
+      "id": "L3",
+      "category": "Login",
+      "name": "Empty fields",
+      "input": "blank email and password",
+      "expected": "validation message",
+      "actual": "Please enter email and password",
+      "result": "PASS"
+    },
+    {
+      "id": "L4",
+      "category": "Login",
+      "name": "Dashboard without login",
+      "input": "GET /dashboard anonymously",
+      "expected": "redirect to /login",
+      "actual": "Redirected",
+      "result": "PASS"
+    },
+    {
+      "id": "L5",
+      "category": "Login",
+      "name": "Logout then Back",
+      "input": "log out, then browser Back",
+      "expected": "redirect to /login",
+      "actual": "Redirected",
+      "result": "PASS"
+    },
+    {
+      "id": "L6",
+      "category": "Login",
+      "name": "password storage",
+      "input": "inspect stored password",
+      "expected": "BCrypt hash starting $2a$",
+      "actual": "Hash starts with $2a$",
+      "oopConcept": "Encapsulation",
+      "result": "PASS"
+    },
+    {
+      "id": "E1",
+      "category": "Edge",
+      "name": "Negative sensor value",
+      "input": "sensor sends a negative value",
+      "expected": "grey Sensor error chip, value --, no crash",
+      "actual": "Grey chip, value --, no crash",
+      "result": "PASS"
+    },
+    {
+      "id": "E2",
+      "category": "Edge",
+      "name": "Backend stopped",
+      "input": "stop server while dashboard is open",
+      "expected": "Connection lost, retrying...",
+      "actual": "Shown within 4 s",
+      "result": "PASS"
+    },
+    {
+      "id": "E3",
+      "category": "Edge",
+      "name": "Backend restarted",
+      "input": "start server again",
+      "expected": "banner clears, recovered in 2 s",
+      "actual": "Recovered in 2 s",
+      "result": "PASS"
+    },
+    {
+      "id": "E4",
+      "category": "Edge",
+      "name": "Rapid mode switches",
+      "input": "10 rapid mode switches",
+      "expected": "UI consistent",
+      "actual": "No flicker or stale state",
+      "result": "PASS"
+    },
+    {
+      "id": "E5",
+      "category": "Edge",
+      "name": "375 px width",
+      "input": "viewport 375 px",
+      "expected": "sidebar collapses, cards stack",
+      "actual": "As expected",
+      "result": "PASS"
+    },
+    {
+      "id": "E6",
+      "category": "Edge",
+      "name": "Keyboard navigation",
+      "input": "Tab through controls",
+      "expected": "visible focus",
+      "actual": "Visible",
+      "result": "PASS"
+    },
+    {
+      "id": "E7",
+      "category": "Edge",
+      "name": "Status without colour",
+      "input": "read status chips and pill",
+      "expected": "text label always present",
+      "actual": "Present",
+      "result": "PASS"
+    },
+    {
+      "id": "P1",
+      "category": "API",
+      "name": "GET /api/readings logged in",
+      "input": "GET /api/readings",
+      "expected": "200, 4 sensors",
+      "actual": "200, 4 sensors",
+      "durationMs": 18,
+      "result": "PASS"
+    },
+    {
+      "id": "P2",
+      "category": "API",
+      "name": "GET /api/readings not logged in",
+      "input": "GET /api/readings (anonymous)",
+      "expected": "401",
+      "actual": "401",
+      "durationMs": 6,
+      "result": "PASS"
+    },
+    {
+      "id": "P3",
+      "category": "API",
+      "name": "POST demo-mode critical",
+      "input": "POST /api/demo-mode?mode=critical",
+      "expected": "200, next reading Critical",
+      "actual": "200, next reading Critical",
+      "durationMs": 9,
+      "result": "PASS"
+    },
+    {
+      "id": "P4",
+      "category": "API",
+      "name": "POST demo-mode invalid",
+      "input": "POST /api/demo-mode?mode=banana",
+      "expected": "400 Invalid mode",
+      "actual": "400 Invalid mode",
+      "durationMs": 7,
+      "result": "PASS"
+    },
+    {
+      "id": "P5",
+      "category": "API",
+      "name": "GET /api/alerts",
+      "input": "GET /api/alerts",
+      "expected": "200, list of alerts",
+      "actual": "200",
+      "durationMs": 12,
+      "result": "PASS"
+    }
+  ]
+}

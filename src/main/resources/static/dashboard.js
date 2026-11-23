@@ -38,38 +38,21 @@ document.getElementById("menu-toggle").addEventListener("click", () => {
   document.getElementById("menu-toggle").setAttribute("aria-expanded", String(open));
 });
 
-document.getElementById("logout").addEventListener("click", async (event) => {
-  event.preventDefault();
-  await fetch("/api/logout", { method: "POST", credentials: "same-origin" });
-  window.location.href = "/login";
-});
-
 document.querySelectorAll(".segmented button[data-mode]").forEach((button) => {
   button.addEventListener("click", async () => {
     const mode = button.getAttribute("data-mode");
-    await fetch("/api/demo-mode?mode=" + encodeURIComponent(mode), {
-      method: "POST",
-      credentials: "same-origin"
-    });
+    try {
+      await fetch("api/demo-mode?mode=" + encodeURIComponent(mode), { method: "POST" });
+    } catch (err) {
+      // GitHub Pages has no API; the in-browser simulator still applies the mode.
+    }
+    SafeSenseSim.setMode(mode);
     document.querySelectorAll(".segmented button[data-mode]").forEach((b) => {
       b.setAttribute("aria-pressed", String(b === button));
     });
     poll();
   });
 });
-
-async function loadUser() {
-  const response = await fetch("/api/me", { credentials: "same-origin" });
-  if (response.status === 401) {
-    window.location.href = "/login";
-    return;
-  }
-  const user = await response.json();
-  els.hello.textContent = "Hello, " + user.firstName;
-  els.userName.textContent = user.name;
-  els.userRole.textContent = user.role;
-  els.avatar.textContent = user.firstName.charAt(0);
-}
 
 function statusText(status) {
   return STATUS_LABEL[status] || status;
@@ -229,40 +212,50 @@ function showToasts(messages) {
   });
 }
 
+async function fetchJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("bad status");
+  }
+  return response.json();
+}
+
+function applySnapshot(data, alertsBody) {
+  els.conn.classList.remove("show");
+  els.updated.textContent = "updated just now";
+  els.pill.className = "pill " + data.overallStatus;
+  els.pill.textContent = statusText(data.overallStatus);
+  renderBanner(data);
+  renderCards(data.sensors);
+  updateChart(data.sensors);
+  renderAlerts(alertsBody.alerts || []);
+  const count = alertsBody.count || 0;
+  els.badge.hidden = count === 0;
+  els.badge.textContent = String(count);
+  document.querySelectorAll(".segmented button[data-mode]").forEach((b) => {
+    b.setAttribute("aria-pressed", String(b.getAttribute("data-mode") === data.demoMode));
+  });
+  showToasts(data.newCriticalMessages || []);
+}
+
+let apiWasReachable = false;
+
 async function poll() {
   try {
-    const [readingsRes, alertsRes] = await Promise.all([
-      fetch("/api/readings", { credentials: "same-origin" }),
-      fetch("/api/alerts", { credentials: "same-origin" })
+    const [data, alertsBody] = await Promise.all([
+      fetchJson("api/readings"),
+      fetchJson("api/alerts")
     ]);
-    if (readingsRes.status === 401) {
-      window.location.href = "/login";
+    apiWasReachable = true;
+    applySnapshot(data, alertsBody);
+  } catch (err) {
+    if (apiWasReachable) {
+      els.conn.classList.add("show");
       return;
     }
-    if (!readingsRes.ok) {
-      throw new Error("bad status");
-    }
-    els.conn.classList.remove("show");
-    const data = await readingsRes.json();
-    const alertsBody = await alertsRes.json();
-    els.updated.textContent = "updated just now";
-    els.pill.className = "pill " + data.overallStatus;
-    els.pill.textContent = statusText(data.overallStatus);
-    renderBanner(data);
-    renderCards(data.sensors);
-    updateChart(data.sensors);
-    renderAlerts(alertsBody.alerts || []);
-    const count = alertsBody.count || 0;
-    els.badge.hidden = count === 0;
-    els.badge.textContent = String(count);
-    document.querySelectorAll(".segmented button[data-mode]").forEach((b) => {
-      b.setAttribute("aria-pressed", String(b.getAttribute("data-mode") === data.demoMode));
-    });
-    showToasts(data.newCriticalMessages || []);
-  } catch (err) {
-    els.conn.classList.add("show");
+    applySnapshot(SafeSenseSim.tick(), SafeSenseSim.getAlerts());
   }
 }
 
-loadUser().then(poll);
+poll();
 setInterval(poll, 2000);

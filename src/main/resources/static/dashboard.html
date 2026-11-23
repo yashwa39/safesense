@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard · SafeSense</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -18,13 +18,13 @@
         <span>Plant A</span>
       </div>
       <nav class="nav" aria-label="Main">
-        <a class="active" href="/dashboard">Dashboard</a>
-        <a href="/live">Live monitoring</a>
-        <a href="/alerts">Alerts <span class="badge" id="alert-badge" hidden>0</span></a>
-        <a href="/history">History</a>
-        <a href="/limits">Safety limits</a>
-        <a href="/tests">Test results</a>
-        <a href="/settings">Settings</a>
+        <a class="active" href="dashboard.html">Dashboard</a>
+        <a href="coming-soon.html">Live monitoring</a>
+        <a href="coming-soon.html">Alerts <span class="badge" id="alert-badge" hidden>0</span></a>
+        <a href="coming-soon.html">History</a>
+        <a href="coming-soon.html">Safety limits</a>
+        <a href="tests.html">Test results</a>
+        <a href="coming-soon.html">Settings</a>
       </nav>
       <div class="sidebar-footer">
         <div class="user-row">
@@ -35,7 +35,6 @@
           </div>
         </div>
         <p class="muted">Prototype - simulated data</p>
-        <a href="#" id="logout">Log out</a>
       </div>
     </aside>
     <div class="main">
@@ -48,7 +47,7 @@
       <div id="content">
         <div class="header-row">
           <div>
-            <h1 id="hello">Hello</h1>
+            <h1 id="hello">Hello, Aisha</h1>
             <p class="muted" id="updated">updated just now</p>
           </div>
           <div>
@@ -85,6 +84,7 @@
     </div>
   </div>
   <div class="toast" id="toast" hidden role="status"></div>
-  <script src="/dashboard.js"></script>
+  <script src="simulator.js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>

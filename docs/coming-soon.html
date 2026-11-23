@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coming soon · SafeSense</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <p class="logo">SafeSense</p>
+      <div class="zone-card">
+        <strong>Workshop Line 2</strong>
+        <span>Plant A</span>
+      </div>
+      <nav class="nav" aria-label="Main">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="coming-soon.html">Live monitoring</a>
+        <a href="coming-soon.html">Alerts</a>
+        <a href="coming-soon.html">History</a>
+        <a href="coming-soon.html">Safety limits</a>
+        <a href="tests.html">Test results</a>
+        <a href="coming-soon.html">Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <p class="muted">Prototype - simulated data</p>
+      </div>
+    </aside>
+    <div class="main">
+      <button class="menu-toggle" type="button" id="menu-toggle">Menu</button>
+      <div class="card">
+        <h1>Coming soon</h1>
+        <p>This page is a placeholder for the ET-201 prototype. Use Dashboard or Test results.</p>
+        <p><a href="dashboard.html">Back to dashboard</a></p>
+      </div>
+      <p class="page-footer">Prototype - simulated data</p>
+    </div>
+  </div>
+  <script>
+    document.getElementById("menu-toggle").addEventListener("click", () => {
+      document.getElementById("sidebar").classList.toggle("open");
+    });
+  </script>
+</body>
+</html>

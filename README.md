@@ -12,22 +12,27 @@ mvn test
 mvn spring-boot:run
 ```
 
-Open [http://localhost:8080](http://localhost:8080). You will be sent to `/login`.
+Open [http://localhost:8080](http://localhost:8080). The dashboard opens with **no login**.
 
-### Demo login
+### GitHub Pages (static files only)
 
-| Field | Value |
-| --- | --- |
-| Email | `aisha@demo.com` |
-| Password | `Demo@123` |
-| Name | Aisha Khan |
-| Role | Supervisor |
+The site in `docs/` is a static copy: HTML, CSS, and JavaScript. Sensor values are simulated in the browser.
 
-The password is stored as a **BCrypt** hash (starts with `$2a$`). There is no registration page in this version (see the TODO on `User`).
+1. Repo Settings → Pages → Source: **Deploy from a branch**
+2. Branch: `main` / folder: `/docs`
+3. Site URL: [https://yashwa39.github.io/safesense/](https://yashwa39.github.io/safesense/)
 
-Useful URLs after login:
+Pages:
 
-- `/dashboard` — live cards, banner, chart, alerts (polls `GET /api/readings` every 2 seconds)
+- `dashboard.html` (also `index.html`) — live cards, banner, chart, alerts
+- `tests.html` — sample report and in-browser live OOP checks
+- `coming-soon.html` — placeholders
+
+Login was removed so GitHub Pages can host the demo without a Java server.
+
+Useful URLs with Spring Boot:
+
+- `/dashboard` — live cards, banner, chart, alerts (polls `GET /api/readings` every 2 seconds, or uses the browser simulator if the API is missing)
 - `/tests` — sample test report and live OOP runner
 - `/live`, `/alerts`, `/history`, `/limits`, `/settings` — “Coming soon”
 
@@ -61,7 +66,7 @@ Default limits (warning / critical): sound 85 / 100 dB, CO 35 / 200 ppm, H2S 10 
 
 ## Test results page
 
-Open **Test results** in the sidebar or go to [http://localhost:8080/tests](http://localhost:8080/tests) (login required).
+Open **Test results** in the sidebar or go to [http://localhost:8080/tests](http://localhost:8080/tests) (or `tests.html` on GitHub Pages).
 
 - **Sample report** (`GET /api/test-results`) is the demonstration JSON in `src/main/resources/data/test-results.json` (36 cases: 35 PASS, 1 FIXED, pass rate 100% after the T8 fix). Totals are counted from the file, not hard-coded.
 - **Live run** (`POST /api/test-results/run`) executes real checks on the Java classes (U1–U8, T1–T12, L6). After the `>=` threshold fix, T8 is **PASS** on a live run (the sample report keeps T8 as **FIXED** to show BUG-01).
@@ -89,13 +94,10 @@ The GUI already consumes `GET /api/readings` and `GET /api/alerts`. It does not 
 
 | Method | Path | Notes |
 | --- | --- | --- |
-| POST | `/api/login` | Session cookie |
-| POST | `/api/logout` | |
-| GET | `/api/me` | Current user |
 | GET | `/api/readings` | Zone snapshot |
 | GET | `/api/alerts` | Latest 50 |
 | POST | `/api/demo-mode?mode=auto\|normal\|warning\|critical` | |
 | GET | `/api/test-results` | Sample report + summary |
 | POST | `/api/test-results/run` | Live OOP tests + summary |
 
-Unauthenticated API calls return **401** JSON. Unknown demo modes return **400** `{ "error": "Invalid mode" }`.
+Unknown demo modes return **400** `{ "error": "Invalid mode" }`. The dashboard does not require login.

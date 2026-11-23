@@ -2,56 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Log in · SafeSense</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="/style.css">
+  <meta http-equiv="refresh" content="0; url=dashboard.html">
+  <title>SafeSense</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="login-wrap">
-    <form class="login-card" id="login-form" novalidate>
-      <p class="muted">ET-201 · Team 23</p>
-      <h1>SafeSense</h1>
-      <p class="muted">Workplace gas and sound monitoring</p>
-      <label for="email">Email</label>
-      <input id="email" name="email" type="email" autocomplete="username" required>
-      <label for="password">Password</label>
-      <input id="password" name="password" type="password" autocomplete="current-password" required>
-      <p class="form-error" id="error" role="alert"></p>
-      <button class="btn" type="submit">Log in</button>
-      <p class="muted" style="margin-top:16px">Demo: aisha@demo.com / Demo@123</p>
-    </form>
+    <p>Login is disabled for the GitHub Pages demo. <a href="dashboard.html">Open the dashboard</a>.</p>
   </main>
-  <script>
-    const form = document.getElementById("login-form");
-    const error = document.getElementById("error");
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      if (!email || !password) {
-        error.textContent = "Please enter email and password";
-        return;
-      }
-      error.textContent = "";
-      try {
-        const response = await fetch("/api/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "same-origin",
-          body: JSON.stringify({ email, password })
-        });
-        const body = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          error.textContent = body.error || "Invalid email or password";
-          return;
-        }
-        sessionStorage.setItem("safesenseUser", JSON.stringify(body));
-        window.location.href = "/dashboard";
-      } catch (err) {
-        error.textContent = "Connection lost, retrying...";
-      }
-    });
-  </script>
 </body>
 </html>

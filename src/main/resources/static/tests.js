@@ -33,12 +33,6 @@ const els = {
 document.getElementById("menu-toggle").addEventListener("click", () => {
   document.getElementById("sidebar").classList.toggle("open");
 });
-document.getElementById("logout").addEventListener("click", async (event) => {
-  event.preventDefault();
-  await fetch("/api/logout", { method: "POST", credentials: "same-origin" });
-  window.location.href = "/login";
-});
-
 els.sample.addEventListener("click", () => {
   usingLive = false;
   els.sample.setAttribute("aria-pressed", "true");
@@ -224,15 +218,26 @@ function render() {
   renderCoverage(data);
 }
 
+function withSummary(data) {
+  if (!data.summary) {
+    data.summary = SafeSenseSim.summarise(data.tests || []);
+  }
+  return data;
+}
+
 async function runLive() {
   els.run.disabled = true;
   els.run.innerHTML = '<span class="spinner" aria-hidden="true"></span>Running';
   try {
-    const response = await fetch("/api/test-results/run", {
-      method: "POST",
-      credentials: "same-origin"
-    });
-    liveReport = await response.json();
+    try {
+      const response = await fetch("api/test-results/run", { method: "POST" });
+      if (!response.ok) {
+        throw new Error("no api");
+      }
+      liveReport = await response.json();
+    } catch (err) {
+      liveReport = withSummary(SafeSenseSim.runLiveTests(report && report.bug));
+    }
     usingLive = true;
     els.sample.setAttribute("aria-pressed", "false");
     els.live.setAttribute("aria-pressed", "true");
@@ -243,15 +248,20 @@ async function runLive() {
   }
 }
 
-fetch("/api/test-results", { credentials: "same-origin" })
-  .then((r) => {
-    if (r.status === 401) {
-      window.location.href = "/login";
-      throw new Error("auth");
+async function loadSample() {
+  try {
+    const response = await fetch("api/test-results");
+    if (response.ok) {
+      return response.json();
     }
-    return r.json();
-  })
-  .then((data) => {
-    report = data;
-    render();
-  });
+  } catch (err) {
+    // Fall through to the static JSON used on GitHub Pages.
+  }
+  const response = await fetch("data/test-results.json");
+  return withSummary(await response.json());
+}
+
+loadSample().then((data) => {
+  report = data;
+  render();
+});
