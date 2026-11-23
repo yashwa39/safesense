@@ -1,3 +1,6 @@
+// True when running on GitHub Pages or opened as a local file — no backend available.
+const STATIC_ONLY = location.protocol === "file:" || location.hostname.endsWith("github.io");
+
 let report = null;
 let liveReport = null;
 let usingLive = false;
@@ -229,13 +232,17 @@ async function runLive() {
   els.run.disabled = true;
   els.run.innerHTML = '<span class="spinner" aria-hidden="true"></span>Running';
   try {
-    try {
-      const response = await fetch("api/test-results/run", { method: "POST" });
-      if (!response.ok) {
-        throw new Error("no api");
+    if (!STATIC_ONLY) {
+      try {
+        const response = await fetch("api/test-results/run", { method: "POST" });
+        if (!response.ok) {
+          throw new Error("no api");
+        }
+        liveReport = await response.json();
+      } catch (err) {
+        liveReport = withSummary(SafeSenseSim.runLiveTests(report && report.bug));
       }
-      liveReport = await response.json();
-    } catch (err) {
+    } else {
       liveReport = withSummary(SafeSenseSim.runLiveTests(report && report.bug));
     }
     usingLive = true;
@@ -249,13 +256,15 @@ async function runLive() {
 }
 
 async function loadSample() {
-  try {
-    const response = await fetch("api/test-results");
-    if (response.ok) {
-      return response.json();
+  if (!STATIC_ONLY) {
+    try {
+      const response = await fetch("api/test-results");
+      if (response.ok) {
+        return response.json();
+      }
+    } catch (err) {
+      // Fall through to the static JSON.
     }
-  } catch (err) {
-    // Fall through to the static JSON used on GitHub Pages.
   }
   const response = await fetch("data/test-results.json");
   return withSummary(await response.json());

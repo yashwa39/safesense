@@ -5,7 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * SafeSense prototype (ET-201, Team 23).
- * Run with: mvn spring-boot:run then open http://localhost:8080
+ * Run with: mvn spring-boot:run
+ * The server port is read from the PORT environment variable (default 8080).
  */
 @SpringBootApplication
 public class SafeSenseApplication {

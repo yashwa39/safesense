@@ -1,3 +1,6 @@
+// True when running on GitHub Pages or opened as a local file — no backend available.
+const STATIC_ONLY = location.protocol === "file:" || location.hostname.endsWith("github.io");
+
 const STATUS_LABEL = {
   NORMAL: "Normal",
   WARNING: "Warning",
@@ -41,10 +44,12 @@ document.getElementById("menu-toggle").addEventListener("click", () => {
 document.querySelectorAll(".segmented button[data-mode]").forEach((button) => {
   button.addEventListener("click", async () => {
     const mode = button.getAttribute("data-mode");
-    try {
-      await fetch("api/demo-mode?mode=" + encodeURIComponent(mode), { method: "POST" });
-    } catch (err) {
-      // GitHub Pages has no API; the in-browser simulator still applies the mode.
+    if (!STATIC_ONLY) {
+      try {
+        await fetch("api/demo-mode?mode=" + encodeURIComponent(mode), { method: "POST" });
+      } catch (err) {
+        // Backend unreachable — simulator handles the mode change below.
+      }
     }
     SafeSenseSim.setMode(mode);
     document.querySelectorAll(".segmented button[data-mode]").forEach((b) => {
@@ -241,6 +246,10 @@ function applySnapshot(data, alertsBody) {
 let apiWasReachable = false;
 
 async function poll() {
+  if (STATIC_ONLY) {
+    applySnapshot(SafeSenseSim.tick(), SafeSenseSim.getAlerts());
+    return;
+  }
   try {
     const [data, alertsBody] = await Promise.all([
       fetchJson("api/readings"),

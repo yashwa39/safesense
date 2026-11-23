@@ -12,7 +12,21 @@ mvn test
 mvn spring-boot:run
 ```
 
-Open [http://localhost:8080](http://localhost:8080). The dashboard opens with **no login**.
+The dashboard opens at the root path with **no login required**. The server port defaults to `8080` and can be overridden with the `PORT` environment variable.
+
+### Deploy to a cloud platform (Render / Railway / Heroku)
+
+A `Procfile` is included at the repo root. General steps:
+
+1. Build the fat JAR: `mvn package -DskipTests`
+2. The start command is: `java -jar target/safesense-0.1.0.jar`
+3. Set the `PORT` environment variable if the platform does not inject it automatically (Render and Railway do this by default).
+
+**Render** — New Web Service → connect repo → Build command: `mvn package -DskipTests` → Start command: `java -jar target/safesense-0.1.0.jar`
+
+**Railway** — New Project → Deploy from GitHub repo → Railway detects the `Procfile` automatically.
+
+**Heroku** — `heroku create` then `git push heroku main`. Heroku detects the `Procfile` and injects `PORT`.
 
 ### GitHub Pages (static files only)
 
@@ -28,7 +42,7 @@ Pages:
 - `tests.html` — sample report and in-browser live OOP checks
 - `coming-soon.html` — placeholders
 
-Login was removed so GitHub Pages can host the demo without a Java server.
+Login is disabled so GitHub Pages can host the demo without a Java server. When the Spring Boot backend is reachable, the dashboard automatically switches from the in-browser simulator to live API data.
 
 Useful URLs with Spring Boot:
 
@@ -66,7 +80,7 @@ Default limits (warning / critical): sound 85 / 100 dB, CO 35 / 200 ppm, H2S 10 
 
 ## Test results page
 
-Open **Test results** in the sidebar or go to [http://localhost:8080/tests](http://localhost:8080/tests) (or `tests.html` on GitHub Pages).
+Open **Test results** in the sidebar or go to `/tests` (or `tests.html` on GitHub Pages).
 
 - **Sample report** (`GET /api/test-results`) is the demonstration JSON in `src/main/resources/data/test-results.json` (36 cases: 35 PASS, 1 FIXED, pass rate 100% after the T8 fix). Totals are counted from the file, not hard-coded.
 - **Live run** (`POST /api/test-results/run`) executes real checks on the Java classes (U1–U8, T1–T12, L6). After the `>=` threshold fix, T8 is **PASS** on a live run (the sample report keeps T8 as **FIXED** to show BUG-01).
